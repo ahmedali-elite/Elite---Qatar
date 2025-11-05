@@ -1,6 +1,5 @@
-import React, { useState, useCallback, Suspense, lazy } from 'react';
+import React, { useState, useCallback, Suspense } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { getFullJourneySummary } from './services/geminiService';
 import type { UserData, GamificationData, SummaryData } from './types';
 
 // Import Step Components
@@ -9,7 +8,7 @@ import BasicInfoStep from './components/BasicInfoStep';
 import GoalsStep from './components/GoalsStep';
 import PlatformSelectionStep from './components/PlatformSelectionStep';
 import ChallengesStep from './components/ChallengesStep';
-const SummaryStep = lazy(() => import('./components/SummaryStep'));
+import SummaryStep from './components/SummaryStep'; // No longer lazy loaded
 import Header from './components/Header';
 import ContactModal from './components/ContactModal';
 import { Loader2 } from 'lucide-react';
@@ -17,23 +16,9 @@ import { useLanguage } from './i18n/LanguageContext';
 
 const TOTAL_STEPS = 5;
 
-// FIX: Removed React.FC to resolve potential type conflicts with framer-motion.
-const StepLoader = () => {
-    const { t } = useLanguage();
-    return (
-        <div className="h-screen w-screen flex flex-col items-center justify-center text-center p-4 bg-white">
-          <Loader2 className="w-16 h-16 animate-spin text-brand-green mb-4" />
-          <h2 className="text-3xl font-bold text-gray-800">{t('loading.title')}</h2>
-          <p className="text-gray-500 mt-2">{t('loading.subtitle')}</p>
-        </div>
-    );
-};
-
-// FIX: Removed React.FC to resolve potential type conflicts with framer-motion.
 const App = () => {
   const [currentStep, setCurrentStep] = useState(0);
-  const [isLoading, setIsLoading] = useState(false);
-  const { language, t } = useLanguage();
+  const { t } = useLanguage();
   const [isContactModalOpen, setIsContactModalOpen] = useState(false);
   const [userData, setUserData] = useState<UserData>({
     name: '',
@@ -50,7 +35,10 @@ const App = () => {
     badges: [],
     title: 'Explorer',
   });
-  const [summaryData, setSummaryData] = useState<SummaryData | null>(null);
+  // The summaryData state is now managed within the SummaryStep itself.
+  // We keep a copy here mainly for the ContactModal.
+  const [finalSummaryData, setFinalSummaryData] = useState<SummaryData | null>(null);
+
 
   const addPoints = (amount: number) => {
     setGamificationData(prev => ({ ...prev, points: prev.points + amount }));
@@ -99,43 +87,23 @@ const App = () => {
   }, [handleUpdateUserData, addBadge]);
 
   const handleChallengesSubmit = useCallback((data: Partial<UserData>) => {
-    const finalUserDataWithIDs = { ...userData, ...data };
+    const finalUserData = { ...userData, ...data };
     handleUpdateUserData(data);
 
     addPoints(200);
     addBadge('Challenge Tackler');
 
-    if (finalUserDataWithIDs.goals.length >= 3 && finalUserDataWithIDs.challenges.length >= 3) {
+    if (finalUserData.goals.length >= 3 && finalUserData.challenges.length >= 3) {
       addPoints(250);
       addBadge('Master Strategist');
     }
+    
+    // NO MORE LOADING SCREEN. NAVIGATE DIRECTLY TO THE DASHBOARD.
+    nextStep();
 
-    // Translate IDs to strings for the API call
-    const translatedUserData = {
-        ...finalUserDataWithIDs,
-        industry: t(`constants.industries.${finalUserDataWithIDs.industry}`),
-        subIndustry: t(`constants.sub_industries.${finalUserDataWithIDs.subIndustry}`),
-        companySize: t(`constants.company_sizes.${finalUserDataWithIDs.companySize}`),
-        goals: finalUserDataWithIDs.goals.map(id => t(`constants.goals.${id}`)),
-        challenges: finalUserDataWithIDs.challenges.map(id => t(`constants.challenges.${id}`)),
-        platforms: finalUserDataWithIDs.platforms.map(id => t(`constants.platforms.${id}`)),
-    };
-
-    setIsLoading(true);
-    getFullJourneySummary(translatedUserData, language).then(apiResponse => {
-        setSummaryData(apiResponse);
-        setGamificationData(prev => ({ ...prev, title: apiResponse.gamification.title }))
-    }).finally(() => {
-        setIsLoading(false);
-        nextStep();
-    });
-  }, [addBadge, userData, handleUpdateUserData, language, t]);
+  }, [addBadge, userData, handleUpdateUserData]);
 
   const renderStep = () => {
-    if (isLoading) {
-      return <StepLoader />;
-    }
-
     switch (currentStep) {
       case 0:
         return <WelcomeScreen onStart={() => { addPoints(50); addBadge('Journey Starter'); nextStep(); }} />;
@@ -148,10 +116,14 @@ const App = () => {
       case 4:
         return <ChallengesStep onNext={handleChallengesSubmit} userData={userData} onPrevious={previousStep} />;
       case 5:
+        // Pass the complete user data to SummaryStep, which will handle its own data fetching and state.
         return (
-            <Suspense fallback={<StepLoader />}>
-                <SummaryStep summaryData={summaryData} gamificationData={gamificationData} userData={userData} onPrevious={previousStep} onBook={() => setIsContactModalOpen(true)} />
-            </Suspense>
+            <SummaryStep
+                gamificationData={gamificationData}
+                userData={userData}
+                onPrevious={previousStep}
+                onBook={() => setIsContactModalOpen(true)}
+            />
         );
       default:
         return <WelcomeScreen onStart={() => setCurrentStep(1)} />;
@@ -169,7 +141,7 @@ const App = () => {
         isOpen={isContactModalOpen}
         onClose={() => setIsContactModalOpen(false)}
         userData={userData}
-        summaryData={summaryData}
+        summaryData={finalSummaryData} // The modal might need final data, though it's not the primary display.
       />
       <AnimatePresence mode="wait">
         <motion.div

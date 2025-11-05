@@ -17,34 +17,6 @@ export interface GamificationData {
   title: string;
 }
 
-export interface ChartData {
-  name: string;
-  impact: number;
-}
-
-export interface KpiProjection {
-    name: string;
-    current: number;
-    projected: number;
-}
-
-export interface TimelineMilestone {
-    quarter: string;
-    focus: string;
-    milestones: string[];
-}
-
-export interface FocusArea {
-    area: string;
-    score: number;
-}
-
-export interface BudgetAllocation {
-    name: string;
-    value: number;
-    color: string;
-}
-
 export interface SwotAnalysis {
     strengths: string[];
     weaknesses: string[];
@@ -64,24 +36,44 @@ export interface GoalRecommendation {
     recommendations: string[];
 }
 
+export interface TimelineEvent {
+    quarter: string; // e.g., "Q1 2025"
+    focus: string;
+    keyActions: string[];
+}
+
+export interface KpiData {
+    month: string;
+    value: number;
+}
+
+export interface BudgetAllocation {
+    channel: string;
+    percentage: number;
+}
+
+// The original, detailed data structure for the full strategic plan.
 export interface SummaryData {
     executiveSummary: string;
-    timeline: TimelineMilestone[];
-    kpiProjections: KpiProjection[];
-    focusAreas: FocusArea[];
-    budgetAllocation: BudgetAllocation[];
+    goalRecommendations: GoalRecommendation[];
     swotAnalysis: SwotAnalysis;
     customerPersona: CustomerPersona;
-    challengesAnalysis: {
-        summary: string;
-        chartData: ChartData[];
-    };
-    goalRecommendations: GoalRecommendation[];
+    timeline: TimelineEvent[];
+    kpiProjections: {
+        name: string;
+        data: KpiData[];
+    }[];
+    budgetAllocation: BudgetAllocation[];
     gamification: {
         title: string;
         badgeIcon: string;
     };
+    // FIX: Added missing properties to align with API response and component usage.
+    keyPriorities: string[];
+    keyChannels: string[];
+    metricsForSuccess: string[];
 }
+
 
 export interface ContentOption {
   id: string;
