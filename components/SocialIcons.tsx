@@ -1,11 +1,11 @@
 import React from 'react';
-// FIX: Removed Variants from import as it's not exported in the version of framer-motion being used.
-import { motion } from 'framer-motion';
+// FIX: Correctly import Variants from framer-motion to resolve typing issues.
+import { motion, type Variants } from 'framer-motion';
 import { FaXTwitter, FaLinkedin, FaFacebook } from 'react-icons/fa6';
 import { useLanguage } from '../i18n/LanguageContext';
 
-// FIX: Removed explicit Variants type
-const iconVariants = {
+// FIX: Explicitly typed iconVariants with Variants to fix type error
+const iconVariants: Variants = {
   hover: {
     scale: 1.2,
     y: -5,

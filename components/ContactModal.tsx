@@ -1,6 +1,6 @@
 import React from 'react';
-// FIX: Removed Variants from import as it's not exported in the version of framer-motion being used.
-import { motion, AnimatePresence } from 'framer-motion';
+// FIX: Correctly import Variants from framer-motion to resolve typing issues.
+import { motion, AnimatePresence, type Variants } from 'framer-motion';
 import { X, Mail } from 'lucide-react';
 import { FaWhatsapp } from 'react-icons/fa';
 import type { UserData, SummaryData } from '../types';
@@ -49,14 +49,14 @@ const ContactModal = ({ isOpen, onClose, userData, summaryData }: ContactModalPr
         onClose();
     };
 
-    // FIX: Removed explicit Variants type
-    const backdropVariants = {
+    // FIX: Explicitly typed backdropVariants with Variants
+    const backdropVariants: Variants = {
         hidden: { opacity: 0 },
         visible: { opacity: 1 },
     };
 
-    // FIX: Removed explicit Variants type
-    const modalVariants = {
+    // FIX: Explicitly typed modalVariants with Variants to fix type error
+    const modalVariants: Variants = {
         hidden: { opacity: 0, scale: 0.9 },
         visible: { opacity: 1, scale: 1, transition: { type: 'spring', stiffness: 200, damping: 25 } },
         exit: { opacity: 0, scale: 0.9 }

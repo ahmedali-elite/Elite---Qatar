@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
-// FIX: Removed Variants from import as it's not exported in the version of framer-motion being used.
-import { motion, AnimatePresence } from 'framer-motion';
+// FIX: Correctly import Variants from framer-motion to resolve typing issues.
+import { motion, AnimatePresence, type Variants } from 'framer-motion';
 import { Check, Download, ArrowLeft, Share2, FileText, CalendarClock, Trophy, Phone, PieChart as PieChartIcon, Target, Lock, Loader2, User, Brain, Lightbulb, ShieldCheck, ThumbsDown, ThumbsUp, BrainCircuit, BarChart3 } from 'lucide-react';
 import { BarChart as RechartsBarChart, Bar, XAxis, YAxis, ResponsiveContainer, CartesianGrid, PieChart, Pie, Cell, Radar, RadarChart, PolarGrid, PolarAngleAxis, Legend } from 'recharts';
 import type { SummaryData, GamificationData, UserData } from '../types';
@@ -99,13 +99,13 @@ const SummaryStep = ({ summaryData, gamificationData, userData, onPrevious, onBo
 
   const { executiveSummary, timeline, kpiProjections, gamification, focusAreas, budgetAllocation, swotAnalysis, customerPersona, goalRecommendations, challengesAnalysis } = summaryData;
 
-  const containerVariants = {
+  const containerVariants: Variants = {
     hidden: { opacity: 0 },
     visible: { opacity: 1, transition: { staggerChildren: 0.1 } },
   };
 
-  // FIX: Removed explicit Variants type
-  const itemVariants = {
+  // FIX: Explicitly typed itemVariants with Variants to fix type error
+  const itemVariants: Variants = {
     hidden: { y: 20, opacity: 0, scale: 0.95 },
     visible: { y: 0, opacity: 1, scale: 1, transition: { type: 'spring', stiffness: 100, damping: 15 } },
   };
