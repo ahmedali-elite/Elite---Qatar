@@ -15,20 +15,22 @@ const itemVariants: Variants = {
     visible: { y: 0, opacity: 1, scale: 1, transition: { type: 'spring', stiffness: 100, damping: 15 } },
 };
 
-const SkeletonLoader = ({ className = '', message }: { className?: string, message: string }) => (
+// FIX: Wrap in React.memo to ensure it's treated as a component, resolving prop type errors for `key`.
+const SkeletonLoader = React.memo(({ className = '', message }: { className?: string, message: string }) => (
     <div className={`w-full h-full bg-gray-200/50 rounded-2xl animate-pulse flex items-center justify-center p-6 ${className}`}>
         <div className="text-center text-gray-500">
             <Loader2 className="w-8 h-8 mx-auto animate-spin mb-3" />
             <p className="font-semibold">{message}</p>
         </div>
     </div>
-);
+));
 
-const DashboardPanel = ({ children, className = '' }: { children: React.ReactNode, className?: string }) => (
+// FIX: Wrap in React.memo to ensure it's treated as a component, resolving prop type errors for `children`.
+const DashboardPanel = React.memo(({ children, className = '' }: { children: React.ReactNode, className?: string }) => (
     <motion.div variants={itemVariants} className={`bg-white border border-gray-200/80 p-4 sm:p-6 rounded-2xl shadow-lg hover:shadow-2xl transition-shadow duration-300 ${className}`}>
         {children}
     </motion.div>
-);
+));
 
 const AnimatedIcon = ({ icon: Icon }: { icon: React.ElementType }) => (
     <motion.div animate={{ scale: [1, 1.1, 1], rotate: [0, 5, -5, 0] }} transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}>
@@ -83,9 +85,10 @@ interface SummaryStepProps {
   userData: UserData;
   onPrevious: () => void;
   onBook: () => void;
+  onSummaryLoaded: (data: SummaryData) => void;
 }
 
-const SummaryStep = ({ gamificationData, userData, onPrevious, onBook }: SummaryStepProps) => {
+const SummaryStep = ({ gamificationData, userData, onPrevious, onBook, onSummaryLoaded }: SummaryStepProps) => {
   const { t, language } = useLanguage();
   const [summaryData, setSummaryData] = useState<Partial<SummaryData> | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -115,6 +118,22 @@ const SummaryStep = ({ gamificationData, userData, onPrevious, onBook }: Summary
     
     getFullJourneySummary(translatedUserData, language, handleUpdate, handleError);
   }, [userData, language, t]);
+
+  useEffect(() => {
+    if (
+      summaryData &&
+      summaryData.executiveSummary &&
+      summaryData.goalRecommendations &&
+      summaryData.swotAnalysis &&
+      summaryData.customerPersona &&
+      summaryData.timeline &&
+      summaryData.kpiProjections &&
+      summaryData.budgetAllocation &&
+      summaryData.gamification
+    ) {
+      onSummaryLoaded(summaryData as SummaryData);
+    }
+  }, [summaryData, onSummaryLoaded]);
 
 
   const handleDownload = async () => {
@@ -334,8 +353,14 @@ const SummaryStep = ({ gamificationData, userData, onPrevious, onBook }: Summary
                       <motion.button onClick={handleDownload} disabled={isDownloading || !summaryData?.executiveSummary} whileHover={{ scale: 1.05, boxShadow: '0 0 25px rgba(169, 206, 23, 0.4)' }} whileTap={{ scale: 0.95 }} className="px-6 py-3 bg-brand-green text-white font-bold rounded-full shadow-lg flex items-center justify-center gap-2 disabled:bg-gray-400 disabled:cursor-not-allowed w-full sm:w-auto">
                           {isDownloading ? <><Loader2 className="animate-spin" /> {t('summary.generatingPDF')}</> : <><Download /> {t('summary.downloadButton')}</>}
                       </motion.button>
-                      <motion.button onClick={onBook} whileHover={{ scale: 1.05, boxShadow: '0 0 25px rgba(138, 164, 16, 0.5)' }} whileTap={{ scale: 0.95 }} className="px-8 py-4 text-lg bg-brand-green-dark text-white font-bold rounded-full shadow-lg flex items-center justify-center gap-2 w-full sm:w-auto">
-                          <Phone /> {t('summary.bookButton')}
+                      <motion.button
+                        onClick={onBook}
+                        disabled={!summaryData?.executiveSummary}
+                        whileHover={!summaryData?.executiveSummary ? {} : { scale: 1.05, boxShadow: '0 0 25px rgba(138, 164, 16, 0.5)' }}
+                        whileTap={!summaryData?.executiveSummary ? {} : { scale: 0.95 }}
+                        className="px-8 py-4 text-lg bg-brand-green-dark text-white font-bold rounded-full shadow-lg flex items-center justify-center gap-2 w-full sm:w-auto disabled:bg-gray-400 disabled:cursor-not-allowed"
+                      >
+                        <Phone /> {t('summary.bookButton')}
                       </motion.button>
                   </div>
                    <div className="mt-12">

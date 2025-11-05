@@ -8,7 +8,8 @@ interface BadgeDisplayProps {
 }
 
 // FIX: Removed React.FC to resolve potential type conflicts with framer-motion.
-const BadgeDisplay = ({ badgeName }: BadgeDisplayProps) => {
+// FIX: Wrap in React.memo to ensure it's treated as a component, resolving prop type errors for `key`.
+const BadgeDisplay = React.memo(({ badgeName }: BadgeDisplayProps) => {
   const badgeInfo = BADGES[badgeName];
   if (!badgeInfo) return null;
 
@@ -31,7 +32,7 @@ const BadgeDisplay = ({ badgeName }: BadgeDisplayProps) => {
       </div>
     </motion.div>
   );
-};
+});
 
 
 interface GamificationTrackerProps {

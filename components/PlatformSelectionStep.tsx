@@ -12,7 +12,8 @@ interface PlatformSelectionStepProps {
 }
 
 // FIX: Removed React.FC to resolve potential type conflicts with framer-motion.
-const PlatformCard = ({ option, onSelect, isSelected }: { option: ContentOption; onSelect: () => void; isSelected: boolean }) => {
+// FIX: Wrap in React.memo to ensure it's treated as a component, resolving prop type errors for `key`.
+const PlatformCard = React.memo(({ option, onSelect, isSelected }: { option: ContentOption; onSelect: () => void; isSelected: boolean }) => {
   const { t } = useLanguage();
   const Icon = option.icon;
   return (
@@ -26,7 +27,7 @@ const PlatformCard = ({ option, onSelect, isSelected }: { option: ContentOption;
       <h3 className="text-lg font-semibold text-gray-800">{t(option.title)}</h3>
     </motion.div>
   );
-};
+});
 
 // FIX: Removed React.FC to resolve potential type conflicts with framer-motion.
 const PlatformSelectionStep = ({ onNext, userData, onPrevious }: PlatformSelectionStepProps) => {

@@ -282,7 +282,8 @@ const loadedTranslations = {
 
 
 // FIX: Removed React.FC to resolve potential type conflicts with framer-motion.
-export const LanguageProvider = ({ children }: { children: React.ReactNode }) => {
+// FIX: Wrap in React.memo to ensure it's treated as a component, resolving prop type errors for `children`.
+export const LanguageProvider = React.memo(({ children }: { children: React.ReactNode }) => {
   const [language, setLanguage] = useState<Language>('en');
 
   useEffect(() => {
@@ -325,7 +326,7 @@ export const LanguageProvider = ({ children }: { children: React.ReactNode }) =>
       {children}
     </LanguageContext.Provider>
   );
-};
+});
 
 export const useLanguage = (): LanguageContextType => {
   const context = useContext(LanguageContext);

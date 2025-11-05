@@ -18,7 +18,8 @@ interface GoalCardProps {
 }
 
 // FIX: Removed React.FC to resolve potential type conflicts with framer-motion.
-const GoalCard = ({ option, onSelect, isSelected }: GoalCardProps) => {
+// FIX: Wrap in React.memo to ensure it's treated as a component, resolving prop type errors for `key`.
+const GoalCard = React.memo(({ option, onSelect, isSelected }: GoalCardProps) => {
     const { t } = useLanguage();
     const Icon = option.icon;
     const title = t(option.title);
@@ -33,7 +34,7 @@ const GoalCard = ({ option, onSelect, isSelected }: GoalCardProps) => {
             <h3 className="text-lg md:text-xl font-semibold text-gray-800">{title}</h3>
         </motion.div>
     );
-};
+});
 
 // FIX: Removed React.FC to resolve potential type conflicts with framer-motion.
 const GoalsStep = ({ onNext, userData, onPrevious }: GoalsStepProps) => {

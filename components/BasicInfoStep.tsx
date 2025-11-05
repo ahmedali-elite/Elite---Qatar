@@ -11,7 +11,8 @@ interface BasicInfoStepProps {
 }
 
 // FIX: Removed React.FC to resolve potential type conflicts with framer-motion.
-const InfoCard = ({ option, onSelect, isSelected }: { option: ContentOption; onSelect: () => void; isSelected: boolean }) => {
+// FIX: Wrap in React.memo to ensure it's treated as a component, resolving prop type errors for `key`.
+const InfoCard = React.memo(({ option, onSelect, isSelected }: { option: ContentOption; onSelect: () => void; isSelected: boolean }) => {
   const { t } = useLanguage();
   const Icon = option.icon;
   return (
@@ -25,7 +26,7 @@ const InfoCard = ({ option, onSelect, isSelected }: { option: ContentOption; onS
       <h3 className="text-base md:text-lg font-semibold text-gray-800">{t(option.title)}</h3>
     </motion.div>
   );
-};
+});
 
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 

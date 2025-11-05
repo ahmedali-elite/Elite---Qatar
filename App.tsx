@@ -123,6 +123,7 @@ const App = () => {
                 userData={userData}
                 onPrevious={previousStep}
                 onBook={() => setIsContactModalOpen(true)}
+                onSummaryLoaded={setFinalSummaryData}
             />
         );
       default:
