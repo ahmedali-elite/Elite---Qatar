@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Interactive AI Client Journey</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,700&family=Tajawal:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+      :root {
+        --font-en: 'Bricolage Grotesque', sans-serif;
+        --font-ar: 'Tajawal', sans-serif;
+      }
+      html[lang="en"] body {
+        font-family: var(--font-en);
+      }
+      html[lang="ar"] body {
+        font-family: var(--font-ar);
+      }
+    </style>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['Bricolage Grotesque', 'sans-serif'],
+              ar: ['Tajawal', 'sans-serif'],
+            },
+            colors: {
+              'brand-green': '#a9ce17',
+              'brand-green-dark': '#8aa410', // A darker shade of the brand green
+              'brand-gray': '#F3F4F6', // Gray 100
+            },
+            animation: {
+              'fade-in': 'fadeIn 1s ease-in-out',
+              'slide-in': 'slideIn 0.5s ease-out',
+              'pulse-glow': 'pulseGlow 2s infinite ease-in-out',
+            },
+            keyframes: {
+              fadeIn: {
+                '0%': { opacity: '0' },
+                '100%': { opacity: '1' },
+              },
+              slideIn: {
+                '0%': { transform: 'translateY(20px)', opacity: '0' },
+                '100%': { transform: 'translateY(0)', opacity: '1' },
+              },
+              pulseGlow: {
+                '0%, 100%': {
+                  boxShadow: '0 0 20px rgba(169, 206, 23, 0.4)',
+                  transform: 'scale(1)',
+                },
+                '50%': {
+                  boxShadow: '0 0 35px rgba(169, 206, 23, 0.7)',
+                  transform: 'scale(1.05)',
+                },
+              },
+            },
+          },
+        },
+      }
+    </script>
+  <script type="importmap">
+{
+  "imports": {
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/",
+    "react/": "https://aistudiocdn.com/react@^19.2.0/",
+    "react": "https://aistudiocdn.com/react@^19.2.0",
+    "lucide-react": "https://aistudiocdn.com/lucide-react@^0.552.0",
+    "@google/genai": "https://aistudiocdn.com/@google/genai@^1.28.0",
+    "framer-motion": "https://aistudiocdn.com/framer-motion@^12.23.24",
+    "recharts": "https://aistudiocdn.com/recharts@^3.3.0",
+    "react-icons/fa6": "https://aistudiocdn.com/react-icons@^5.2.1/fa6",
+    "react-icons/": "https://aistudiocdn.com/react-icons@^5.5.0/",
+    "react-icons/fa": "https://aistudiocdn.com/react-icons@^5.2.1/fa",
+    "react-icons/si": "https://aistudiocdn.com/react-icons@^5.2.1/si",
+    "jspdf": "https://aistudiocdn.com/jspdf@^2.5.1",
+    "html2canvas": "https://aistudiocdn.com/html2canvas@^1.4.1"
+  }
+}
+</script>
+</head>
+  <body class="bg-white text-gray-800 overflow-x-hidden">
+    <div id="root"></div>
+    <script type="module" src="/index.tsx"></script>
+  </body>
+</html>
