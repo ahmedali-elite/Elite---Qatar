@@ -1,9 +1,11 @@
 import React from 'react';
-import { motion, Variants } from 'framer-motion';
+// FIX: Removed Variants from import as it's not exported in the version of framer-motion being used.
+import { motion } from 'framer-motion';
 import { FaXTwitter, FaLinkedin, FaFacebook } from 'react-icons/fa6';
 import { useLanguage } from '../i18n/LanguageContext';
 
-const iconVariants: Variants = {
+// FIX: Removed explicit Variants type
+const iconVariants = {
   hover: {
     scale: 1.2,
     y: -5,
@@ -12,7 +14,8 @@ const iconVariants: Variants = {
   tap: { scale: 0.9 },
 };
 
-const SocialIcons: React.FC = () => {
+// FIX: Removed React.FC to resolve potential type conflicts with framer-motion.
+const SocialIcons = () => {
   const { t } = useLanguage();
   const shareUrl = typeof window !== 'undefined' ? encodeURIComponent(window.location.href) : '';
   const shareText = encodeURIComponent(t('share.text'));

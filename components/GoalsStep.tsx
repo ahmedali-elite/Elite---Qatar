@@ -17,7 +17,8 @@ interface GoalCardProps {
   isSelected: boolean;
 }
 
-const GoalCard: React.FC<GoalCardProps> = ({ option, onSelect, isSelected }) => {
+// FIX: Removed React.FC to resolve potential type conflicts with framer-motion.
+const GoalCard = ({ option, onSelect, isSelected }: GoalCardProps) => {
     const { t } = useLanguage();
     const Icon = option.icon;
     const title = t(option.title);
@@ -34,7 +35,8 @@ const GoalCard: React.FC<GoalCardProps> = ({ option, onSelect, isSelected }) => 
     );
 };
 
-const GoalsStep: React.FC<GoalsStepProps> = ({ onNext, userData, onPrevious }) => {
+// FIX: Removed React.FC to resolve potential type conflicts with framer-motion.
+const GoalsStep = ({ onNext, userData, onPrevious }: GoalsStepProps) => {
   const { t } = useLanguage();
   const [selectedGoals, setSelectedGoals] = useState<string[]>(userData.goals || []);
 

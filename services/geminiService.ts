@@ -225,8 +225,9 @@ export const getFullJourneySummary = async (userData: UserData, language: 'en' |
             5. Ensure the executive summary is concise yet comprehensive.
         `;
 
+        // Fix: Use a modern Gemini model.
         const englishResponse = await ai.models.generateContent({
-            model: 'gemini-2.5-flash',
+            model: 'gemini-2.5-pro',
             contents: englishPrompt,
             config: {
                 responseMimeType: "application/json",
@@ -259,25 +260,27 @@ export const getFullJourneySummary = async (userData: UserData, language: 'en' |
                 ${englishPlanJsonString}
             `;
 
+            // Fix: Use a modern Gemini model for translation.
             const translationResponse = await ai.models.generateContent({
-                model: 'gemini-2.5-flash',
+                model: 'gemini-2.5-pro',
                 contents: translationPrompt,
                 config: {
                     responseMimeType: "application/json",
                 }
             });
 
-            const translatedJsonString = translationResponse.text;
+            const translatedJsonString = translationResponse.text.trim();
             console.log("Successfully translated plan to Arabic.");
             
-            const translatedPlan = JSON.parse(translatedJsonString.trim()) as SummaryData;
+            // Fix: Directly parse the trimmed JSON string.
+            const translatedPlan = JSON.parse(translatedJsonString) as SummaryData;
             return translatedPlan;
 
         } catch (error) {
             console.error("Error translating plan to Arabic:", error);
             // Fallback: If translation fails, return the English plan which is better than nothing.
             try {
-                const englishPlan = JSON.parse(englishPlanJsonString.replace(/```json|```/g, '').trim()) as SummaryData;
+                const englishPlan = JSON.parse(englishPlanJsonString.trim()) as SummaryData;
                 return englishPlan;
             } catch (parseError) {
                 console.error("Error parsing English plan after failed translation:", parseError);
@@ -289,7 +292,8 @@ export const getFullJourneySummary = async (userData: UserData, language: 'en' |
     // --- STEP 3: If language was English, parse and return the English plan ---
     console.log("Language is English, parsing and returning generated plan.");
     try {
-        const englishPlan = JSON.parse(englishPlanJsonString.replace(/```json|```/g, '').trim()) as SummaryData;
+        // Fix: Directly parse the trimmed JSON string.
+        const englishPlan = JSON.parse(englishPlanJsonString.trim()) as SummaryData;
         return englishPlan;
     } catch (error) {
         console.error("Error parsing the final English JSON:", error);

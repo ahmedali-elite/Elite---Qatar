@@ -1,5 +1,6 @@
 import React, { useState, useRef } from 'react';
-import { motion, AnimatePresence, Variants } from 'framer-motion';
+// FIX: Removed Variants from import as it's not exported in the version of framer-motion being used.
+import { motion, AnimatePresence } from 'framer-motion';
 import { Check, Download, ArrowLeft, Share2, FileText, CalendarClock, Trophy, Phone, PieChart as PieChartIcon, Target, Lock, Loader2, User, Brain, Lightbulb, ShieldCheck, ThumbsDown, ThumbsUp, BrainCircuit, BarChart3 } from 'lucide-react';
 import { BarChart as RechartsBarChart, Bar, XAxis, YAxis, ResponsiveContainer, CartesianGrid, PieChart, Pie, Cell, Radar, RadarChart, PolarGrid, PolarAngleAxis, Legend } from 'recharts';
 import type { SummaryData, GamificationData, UserData } from '../types';
@@ -17,13 +18,15 @@ interface SummaryStepProps {
   onBook: () => void;
 }
 
-const AnimatedIcon: React.FC<{ icon: React.ElementType }> = ({ icon: Icon }) => (
+// FIX: Removed React.FC to resolve potential type conflicts with framer-motion.
+const AnimatedIcon = ({ icon: Icon }: { icon: React.ElementType }) => (
     <motion.div animate={{ scale: [1, 1.1, 1], rotate: [0, 5, -5, 0] }} transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}>
         <Icon className="w-7 h-7" />
     </motion.div>
 );
 
-const SwotItem: React.FC<{ icon: React.ElementType, title: string, items: string[], color: string }> = ({ icon: Icon, title, items, color }) => (
+// FIX: Removed React.FC to resolve potential type conflicts with framer-motion.
+const SwotItem = ({ icon: Icon, title, items, color }: { icon: React.ElementType, title: string, items: string[], color: string }) => (
     <div className={`p-4 rounded-lg bg-${color}/10`}>
         <h4 className={`font-bold text-lg mb-2 flex items-center gap-2 text-${color}`}>
             <Icon className="w-5 h-5" /> {title}
@@ -38,7 +41,8 @@ const SwotItem: React.FC<{ icon: React.ElementType, title: string, items: string
     </div>
 );
 
-const SummaryStep: React.FC<SummaryStepProps> = ({ summaryData, gamificationData, userData, onPrevious, onBook }) => {
+// FIX: Removed React.FC to resolve potential type conflicts with framer-motion.
+const SummaryStep = ({ summaryData, gamificationData, userData, onPrevious, onBook }: SummaryStepProps) => {
   const { t, language } = useLanguage();
   const [isDownloading, setIsDownloading] = useState(false);
   const printableRef = useRef<HTMLDivElement>(null);
@@ -100,18 +104,21 @@ const SummaryStep: React.FC<SummaryStepProps> = ({ summaryData, gamificationData
     visible: { opacity: 1, transition: { staggerChildren: 0.1 } },
   };
 
-  const itemVariants: Variants = {
+  // FIX: Removed explicit Variants type
+  const itemVariants = {
     hidden: { y: 20, opacity: 0, scale: 0.95 },
     visible: { y: 0, opacity: 1, scale: 1, transition: { type: 'spring', stiffness: 100, damping: 15 } },
   };
 
-  const DashboardPanel: React.FC<{ children: React.ReactNode, className?: string }> = ({ children, className = '' }) => (
+  // FIX: Removed React.FC to resolve potential type conflicts with framer-motion.
+  const DashboardPanel = ({ children, className = '' }: { children: React.ReactNode, className?: string }) => (
     <motion.div variants={itemVariants} className={`bg-white border border-gray-200/80 p-4 sm:p-6 rounded-2xl shadow-lg hover:shadow-2xl transition-shadow duration-300 ${className}`}>
         {children}
     </motion.div>
   );
 
-  const BlurredOverlay: React.FC<{ onUnlock: () => void }> = ({ onUnlock }) => (
+  // FIX: Removed React.FC to resolve potential type conflicts with framer-motion.
+  const BlurredOverlay = ({ onUnlock }: { onUnlock: () => void }) => (
     <div className="absolute inset-0 bg-white/70 backdrop-blur-md flex flex-col items-center justify-center text-center p-4 rounded-2xl z-10">
         <Lock className="w-10 h-10 md:w-12 md:h-12 text-brand-green-dark mb-4" />
         <h4 className="font-bold text-lg md:text-xl text-gray-800">{t('summary.unlockTitle')}</h4>

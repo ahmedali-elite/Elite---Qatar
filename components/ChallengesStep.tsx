@@ -11,7 +11,8 @@ interface ChallengesStepProps {
   onPrevious: () => void;
 }
 
-const ChallengeCard: React.FC<{ option: ContentOption; onSelect: () => void; isSelected: boolean }> = ({ option, onSelect, isSelected }) => {
+// FIX: Removed React.FC to resolve potential type conflicts with framer-motion.
+const ChallengeCard = ({ option, onSelect, isSelected }: { option: ContentOption; onSelect: () => void; isSelected: boolean }) => {
     const { t } = useLanguage();
     const Icon = option.icon;
     return (
@@ -27,7 +28,8 @@ const ChallengeCard: React.FC<{ option: ContentOption; onSelect: () => void; isS
     );
 };
 
-const ChallengesStep: React.FC<ChallengesStepProps> = ({ onNext, userData, onPrevious }) => {
+// FIX: Removed React.FC to resolve potential type conflicts with framer-motion.
+const ChallengesStep = ({ onNext, userData, onPrevious }: ChallengesStepProps) => {
   const { t } = useLanguage();
   const [selectedChallenges, setSelectedChallenges] = useState<string[]>(userData.challenges || []);
 

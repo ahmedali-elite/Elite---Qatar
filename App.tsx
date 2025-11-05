@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, Suspense, lazy } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { getFullJourneySummary } from './services/geminiService';
 import type { UserData, GamificationData, SummaryData } from './types';
@@ -9,7 +9,7 @@ import BasicInfoStep from './components/BasicInfoStep';
 import GoalsStep from './components/GoalsStep';
 import PlatformSelectionStep from './components/PlatformSelectionStep';
 import ChallengesStep from './components/ChallengesStep';
-import SummaryStep from './components/SummaryStep';
+const SummaryStep = lazy(() => import('./components/SummaryStep'));
 import Header from './components/Header';
 import ContactModal from './components/ContactModal';
 import { Loader2 } from 'lucide-react';
@@ -17,7 +17,20 @@ import { useLanguage } from './i18n/LanguageContext';
 
 const TOTAL_STEPS = 5;
 
-const App: React.FC = () => {
+// FIX: Removed React.FC to resolve potential type conflicts with framer-motion.
+const StepLoader = () => {
+    const { t } = useLanguage();
+    return (
+        <div className="h-screen w-screen flex flex-col items-center justify-center text-center p-4 bg-white">
+          <Loader2 className="w-16 h-16 animate-spin text-brand-green mb-4" />
+          <h2 className="text-3xl font-bold text-gray-800">{t('loading.title')}</h2>
+          <p className="text-gray-500 mt-2">{t('loading.subtitle')}</p>
+        </div>
+    );
+};
+
+// FIX: Removed React.FC to resolve potential type conflicts with framer-motion.
+const App = () => {
   const [currentStep, setCurrentStep] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const { language, t } = useLanguage();
@@ -120,13 +133,7 @@ const App: React.FC = () => {
 
   const renderStep = () => {
     if (isLoading) {
-      return (
-        <div className="h-screen w-screen flex flex-col items-center justify-center text-center p-4 bg-white">
-          <Loader2 className="w-16 h-16 animate-spin text-brand-green mb-4" />
-          <h2 className="text-3xl font-bold text-gray-800">{t('loading.title')}</h2>
-          <p className="text-gray-500 mt-2">{t('loading.subtitle')}</p>
-        </div>
-      );
+      return <StepLoader />;
     }
 
     switch (currentStep) {
@@ -141,7 +148,11 @@ const App: React.FC = () => {
       case 4:
         return <ChallengesStep onNext={handleChallengesSubmit} userData={userData} onPrevious={previousStep} />;
       case 5:
-        return <SummaryStep summaryData={summaryData} gamificationData={gamificationData} userData={userData} onPrevious={previousStep} onBook={() => setIsContactModalOpen(true)} />;
+        return (
+            <Suspense fallback={<StepLoader />}>
+                <SummaryStep summaryData={summaryData} gamificationData={gamificationData} userData={userData} onPrevious={previousStep} onBook={() => setIsContactModalOpen(true)} />
+            </Suspense>
+        );
       default:
         return <WelcomeScreen onStart={() => setCurrentStep(1)} />;
     }

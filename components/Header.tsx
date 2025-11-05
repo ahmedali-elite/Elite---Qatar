@@ -11,7 +11,8 @@ interface HeaderProps {
     gamificationData: GamificationData;
 }
 
-const Header: React.FC<HeaderProps> = ({ gamificationData }) => {
+// FIX: Removed React.FC to resolve potential type conflicts with framer-motion.
+const Header = ({ gamificationData }: HeaderProps) => {
     const { t } = useLanguage();
 
     return (

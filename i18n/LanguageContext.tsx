@@ -10,7 +10,8 @@ interface LanguageContextType {
 
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 
-export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+// FIX: Removed React.FC to resolve potential type conflicts with framer-motion.
+export const LanguageProvider = ({ children }: { children: React.ReactNode }) => {
   const [language, setLanguage] = useState<Language>('en');
   const [translations, setTranslations] = useState<Record<Language, any>>({ en: {}, ar: {} });
 
@@ -62,7 +63,7 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     let str = result as string;
     if (options) {
       Object.entries(options).forEach(([optKey, value]) => {
-        // Fix: Use a regex that matches single curly braces {key} instead of double {{key}}
+        // Use a regex that matches single curly braces {key} instead of double {{key}}
         str = str.replace(new RegExp(`{${optKey}}`, 'g'), String(value));
       });
     }

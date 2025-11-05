@@ -10,7 +10,8 @@ interface BasicInfoStepProps {
   userData: UserData;
 }
 
-const InfoCard: React.FC<{ option: ContentOption; onSelect: () => void; isSelected: boolean }> = ({ option, onSelect, isSelected }) => {
+// FIX: Removed React.FC to resolve potential type conflicts with framer-motion.
+const InfoCard = ({ option, onSelect, isSelected }: { option: ContentOption; onSelect: () => void; isSelected: boolean }) => {
   const { t } = useLanguage();
   const Icon = option.icon;
   return (
@@ -28,7 +29,8 @@ const InfoCard: React.FC<{ option: ContentOption; onSelect: () => void; isSelect
 
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-const BasicInfoStep: React.FC<BasicInfoStepProps> = ({ onNext, userData }) => {
+// FIX: Removed React.FC to resolve potential type conflicts with framer-motion.
+const BasicInfoStep = ({ onNext, userData }: BasicInfoStepProps) => {
   const { t } = useLanguage();
   const [name, setName] = useState(userData.name || '');
   const [email, setEmail] = useState(userData.email || '');

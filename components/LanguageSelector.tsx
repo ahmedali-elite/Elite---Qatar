@@ -1,7 +1,8 @@
 import React from 'react';
 import { useLanguage } from '../i18n/LanguageContext';
 
-const LanguageSelector: React.FC = () => {
+// FIX: Removed React.FC to resolve potential type conflicts with framer-motion.
+const LanguageSelector = () => {
   const { language, setLanguage } = useLanguage();
 
   const languages = [

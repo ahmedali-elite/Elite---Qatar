@@ -11,7 +11,8 @@ interface PlatformSelectionStepProps {
   onPrevious: () => void;
 }
 
-const PlatformCard: React.FC<{ option: ContentOption; onSelect: () => void; isSelected: boolean }> = ({ option, onSelect, isSelected }) => {
+// FIX: Removed React.FC to resolve potential type conflicts with framer-motion.
+const PlatformCard = ({ option, onSelect, isSelected }: { option: ContentOption; onSelect: () => void; isSelected: boolean }) => {
   const { t } = useLanguage();
   const Icon = option.icon;
   return (
@@ -27,7 +28,8 @@ const PlatformCard: React.FC<{ option: ContentOption; onSelect: () => void; isSe
   );
 };
 
-const PlatformSelectionStep: React.FC<PlatformSelectionStepProps> = ({ onNext, userData, onPrevious }) => {
+// FIX: Removed React.FC to resolve potential type conflicts with framer-motion.
+const PlatformSelectionStep = ({ onNext, userData, onPrevious }: PlatformSelectionStepProps) => {
   const { t } = useLanguage();
   const [selectedPlatforms, setSelectedPlatforms] = useState<string[]>(userData.platforms || []);
 

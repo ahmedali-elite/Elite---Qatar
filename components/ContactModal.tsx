@@ -1,7 +1,6 @@
 import React from 'react';
-// Fix: Import Variants from framer-motion to explicitly type animation variants.
-import { motion, AnimatePresence, Variants } from 'framer-motion';
-// Fix: Removed unused MessageSquare import.
+// FIX: Removed Variants from import as it's not exported in the version of framer-motion being used.
+import { motion, AnimatePresence } from 'framer-motion';
 import { X, Mail } from 'lucide-react';
 import { FaWhatsapp } from 'react-icons/fa';
 import type { UserData, SummaryData } from '../types';
@@ -14,7 +13,8 @@ interface ContactModalProps {
   summaryData: SummaryData | null;
 }
 
-const ContactModal: React.FC<ContactModalProps> = ({ isOpen, onClose, userData, summaryData }) => {
+// FIX: Removed React.FC to resolve potential type conflicts with framer-motion.
+const ContactModal = ({ isOpen, onClose, userData, summaryData }: ContactModalProps) => {
     const { t } = useLanguage();
     if (!userData || !summaryData) return null;
 
@@ -49,13 +49,14 @@ const ContactModal: React.FC<ContactModalProps> = ({ isOpen, onClose, userData, 
         onClose();
     };
 
-    const backdropVariants: Variants = {
+    // FIX: Removed explicit Variants type
+    const backdropVariants = {
         hidden: { opacity: 0 },
         visible: { opacity: 1 },
     };
 
-    // Fix: Explicitly type modalVariants with Variants to resolve TypeScript error with transition type.
-    const modalVariants: Variants = {
+    // FIX: Removed explicit Variants type
+    const modalVariants = {
         hidden: { opacity: 0, scale: 0.9 },
         visible: { opacity: 1, scale: 1, transition: { type: 'spring', stiffness: 200, damping: 25 } },
         exit: { opacity: 0, scale: 0.9 }

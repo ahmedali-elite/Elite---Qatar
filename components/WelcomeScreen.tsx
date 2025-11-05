@@ -2,7 +2,8 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { useLanguage } from '../i18n/LanguageContext';
 
-const Logo: React.FC = () => (
+// FIX: Removed React.FC to resolve potential type conflicts with framer-motion.
+const Logo = () => (
     <div className="w-64 h-64">
         <iframe
             src="https://lottie.host/embed/82ee423b-ef2f-4c47-a7df-86da20e53d58/2lA2jaRA0B.lottie"
@@ -16,7 +17,8 @@ interface WelcomeScreenProps {
   onStart: () => void;
 }
 
-const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onStart }) => {
+// FIX: Removed React.FC to resolve potential type conflicts with framer-motion.
+const WelcomeScreen = ({ onStart }: WelcomeScreenProps) => {
   const { t } = useLanguage();
   return (
     <div className="h-screen w-screen flex flex-col items-center justify-center text-center p-4 bg-white relative overflow-hidden">

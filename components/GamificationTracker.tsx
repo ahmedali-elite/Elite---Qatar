@@ -7,7 +7,8 @@ interface BadgeDisplayProps {
   badgeName: string;
 }
 
-const BadgeDisplay: React.FC<BadgeDisplayProps> = ({ badgeName }) => {
+// FIX: Removed React.FC to resolve potential type conflicts with framer-motion.
+const BadgeDisplay = ({ badgeName }: BadgeDisplayProps) => {
   const badgeInfo = BADGES[badgeName];
   if (!badgeInfo) return null;
 
@@ -38,7 +39,8 @@ interface GamificationTrackerProps {
   badges: string[];
 }
 
-const GamificationTracker: React.FC<GamificationTrackerProps> = ({ points, badges }) => {
+// FIX: Removed React.FC to resolve potential type conflicts with framer-motion.
+const GamificationTracker = ({ points, badges }: GamificationTrackerProps) => {
   return (
     <div className="flex items-center gap-4 bg-white/70 p-2 rounded-full backdrop-blur-sm shadow-md border border-gray-200/80">
       <div className="flex items-center gap-2 px-3">
